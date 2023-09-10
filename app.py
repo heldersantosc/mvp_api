@@ -11,11 +11,9 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////" + database
 
 db.init_app(app)
 
-
 with app.app_context():
     db.create_all()
     db.session.close()
-
 
 app.register_blueprint(expense_bp, url_prefix="/expense")
 

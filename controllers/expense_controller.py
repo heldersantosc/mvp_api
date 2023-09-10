@@ -1,19 +1,27 @@
 from flask import Blueprint, request, jsonify
 from schemas.expense_schema import ExpenseSchema
+from marshmallow.exceptions import ValidationError
 from services.expense_service import create_expense, list_expenses, total_expenses
+import logging
 
 expense_bp = Blueprint("expense", __name__)
 
 
 @expense_bp.post("/")
-def criar_despesa():
-    data = request.json
-    response = create_expense(data)
-    return jsonify(response)
+def create_new_expense():
+    try:
+        schema = ExpenseSchema()
+        expense = schema.load(request.form)
+        response = create_expense(expense)
+        return jsonify(response)
+    except ValidationError as error:
+        return jsonify({"error": error.messages}), 400
+    except Exception as error:
+        return {"error": "Erro ao cadastrar nova despesa"}, 500
 
 
 @expense_bp.get("/")
-def listar_todas_despesas():
+def list_all_expenses():
     despesas = list_expenses()
     despesa_schema = ExpenseSchema(many=True)
     despesas_json = despesa_schema.dump(despesas)
@@ -21,7 +29,7 @@ def listar_todas_despesas():
 
 
 @expense_bp.get("/total")
-def calcular_total_despesas():
+def calculate_total_expenses():
     response = total_expenses()
     return jsonify(response)
 
