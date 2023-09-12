@@ -11,7 +11,6 @@ def create_expense(data):
             date_time=data["date_time"],
         )
         expense.create()
-        return {"message": "Despesa adicionada com sucesso!"}
     except IntegrityError as error:
         logging.error(error.args)
         raise ValueError("Erro ao cadastrar no banco de dados")
