@@ -27,8 +27,8 @@ class ExpensesBase(BaseModel):
         description="expense value in R$",
     )
     date_time: datetime = Field(
-        example=datetime.now().utcnow(),
-        description="expense date and time",
+        example=datetime.now().isoformat(),
+        description="expense date and time in iso format",
     )
 
 
@@ -37,6 +37,10 @@ class ListAllExpenses(ExpensesBase):
         example=3,
         description="Expense unique id",
     )
+
+
+class PathIdSchema(BaseModel):
+    id: int = Field(..., description="id from unique expense")
 
 
 class ListAllExpensesResponse(BaseModel):
@@ -48,7 +52,7 @@ class ListAllExpensesErrorResponse(BaseModel):
 
 
 class CreateNewExpenseResponse(BaseModel):
-    message: str = "Despesa adicionada com sucesso!"
+    message = "Despesa adicionada com sucesso!"
 
 
 class CreateNewExpenseValidationResponse(BaseModel):
@@ -65,3 +69,40 @@ class CalculateTotalResponse(BaseModel):
 
 class CalculateTotalErrorResponse(BaseModel):
     error = "Erro ao calcular total de despesas"
+
+
+class UpdateExpenseBodySchema(BaseModel):
+    value: float = Field(
+        gt=0,
+        example=32.4,
+        error_msg="O valor da despesa dever ser maior que 0",
+        description="price that will be updated",
+    )
+    description: str = Field(
+        example="Pão de forma",
+        description="new description for expense",
+    )
+
+
+class UpdateExpenseResponse(BaseModel):
+    message = "Despesa atualizada com sucesso"
+
+
+class UpdateExpenseNotFoundResponse(BaseModel):
+    error = "Despesa informada não encontrada"
+
+
+class UpdateExpenseErrorResponse(BaseModel):
+    error = "Erro ao atualizar despesa"
+
+
+class DeleteExpenseResponse(BaseModel):
+    message = "Despesa deletada com sucesso"
+
+
+class DeleteExpenseNotFoundResponse(BaseModel):
+    error = "Despesa informada não encontrada"
+
+
+class DeleteExpenseErrorResponse(BaseModel):
+    error = "Erro ao deletar despesa"

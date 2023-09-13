@@ -2,6 +2,8 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from sqlalchemy import desc, func
 
+from exceptions import NotFoundException
+
 db = SQLAlchemy()
 
 
@@ -20,6 +22,28 @@ class Expense(db.Model):
 
     def create(self):
         db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def update(cls, id: int, value: float, description: str):
+        updated_rows = (
+            db.session.query(cls)
+            .filter_by(id=id)
+            .update({"value": value, "description": description})
+        )
+
+        if updated_rows == 0:
+            raise NotFoundException(f"Despesa {id} não encontrada!")
+
+        db.session.commit()
+
+    @classmethod
+    def delete(cls, id: int):
+        deleted_rows = db.session.query(cls).filter_by(id=id).delete()
+
+        if deleted_rows == 0:
+            raise NotFoundException(f"Despesa {id} não encontrada!")
+
         db.session.commit()
 
     @classmethod
