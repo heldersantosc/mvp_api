@@ -5,7 +5,6 @@ from models.expense import db
 from controllers.expense_controller import expense_bp
 
 info = Info(title="Expenses management", version="1.0.0")
-
 app = OpenAPI(__name__, info=info)
 CORS(app)
 

@@ -11,7 +11,7 @@ tag = Tag(name="Expense", description="Routes to expenses control")
 expense_bp = APIBlueprint(
     "expense",
     __name__,
-    url_prefix="/expense",
+    url_prefix="/api",
     abp_tags=[tag],
     doc_ui=True,
     abp_responses={422: None},
@@ -19,7 +19,7 @@ expense_bp = APIBlueprint(
 
 
 @expense_bp.post(
-    "/",
+    "/expense",
     summary="Creates a new expense",
     responses={
         201: CreateNewExpenseResponse,
@@ -40,7 +40,7 @@ def create_expense_endpoint(form: ExpensesBase):
 
 
 @expense_bp.get(
-    "/",
+    "/expense",
     summary="List all expenses by desc date",
     responses={
         200: ListAllExpensesResponse,
@@ -52,6 +52,7 @@ def list_expenses_endpoint():
         expenses = list_expenses()
         expense_schema = ExpenseSchema(many=True)
         expense_json = expense_schema.dump(expenses)
+        # raise Exception
         return jsonify(data=expense_json), 200
     except Exception as error:
         logging.error(error)
@@ -59,7 +60,7 @@ def list_expenses_endpoint():
 
 
 @expense_bp.get(
-    "/total",
+    "/expense/total",
     summary="Sum all expenses values and return total",
     responses={
         200: CalculateTotalResponse,
@@ -76,7 +77,7 @@ def total_expenses_endpoint():
 
 
 @expense_bp.put(
-    "/<int:id>",
+    "/expense/<int:id>",
     summary="Update an expense by id",
     responses={
         200: UpdateExpenseResponse,
@@ -97,7 +98,7 @@ def update_expense_endpoint(path: PathIdSchema, body: UpdateExpenseBodySchema):
 
 
 @expense_bp.delete(
-    "/<int:id>",
+    "/expense/<int:id>",
     summary="Delete an expense by id",
     responses={
         200: DeleteExpenseResponse,
