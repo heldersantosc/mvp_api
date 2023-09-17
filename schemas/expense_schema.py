@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 from marshmallow import Schema, fields
 from datetime import datetime
 from typing import List
@@ -24,6 +24,18 @@ class ExpensesBase(BaseModel):
         example=datetime.now().isoformat(),
         description="expense date and time in iso format",
     )
+
+    @validator("value")
+    def validate_value(cls, value):
+        if value <= 0:
+            raise ValueError("O valor não pode ser menor ou igual a zero")
+        return value
+
+    @validator("description")
+    def validate_description_length(cls, description):
+        if len(description) < 3:
+            raise ValueError("A descrição deve ter pelo menos 3 caracteres")
+        return description
 
 
 class ListAllExpenses(ExpensesBase):
