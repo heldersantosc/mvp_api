@@ -1,10 +1,9 @@
 import logging
-from flask import request, jsonify
+from flask import jsonify
 from flask_openapi3 import APIBlueprint, Tag
-from marshmallow.exceptions import ValidationError
-from exceptions import NotFoundException
 from schemas.expense_schema import *
 from services.expense_service import *
+from exceptions import *
 
 
 tag = Tag(name="Expense", description="Routes to expenses control")
@@ -18,27 +17,6 @@ expense_bp = APIBlueprint(
 )
 
 
-@expense_bp.post(
-    "/expense",
-    summary="Creates a new expense",
-    responses={
-        201: CreateNewExpenseResponse,
-        400: CreateNewExpenseValidationResponse,
-        500: CreateNewExpenseErrorResponse,
-    },
-)
-def create_expense_endpoint(form: ExpensesBase):
-    try:
-        schema = ExpenseSchema()
-        expense = schema.load(request.form)
-        create_expense(expense)
-        return dict(CreateNewExpenseResponse()), 201
-    except ValidationError as error:
-        return jsonify({"error": error.messages}), 400
-    except Exception:
-        return dict(CreateNewExpenseErrorResponse()), 500
-
-
 @expense_bp.get(
     "/expense",
     summary="List all expenses by desc date",
@@ -50,10 +28,7 @@ def create_expense_endpoint(form: ExpensesBase):
 def list_expenses_endpoint():
     try:
         expenses = list_expenses()
-        expense_schema = ExpenseSchema(many=True)
-        expense_json = expense_schema.dump(expenses)
-        # raise Exception
-        return jsonify(data=expense_json), 200
+        return jsonify(data=expenses), 200
     except Exception as error:
         logging.error(error)
         return dict(ListAllExpensesErrorResponse()), 500
@@ -74,6 +49,25 @@ def total_expenses_endpoint():
     except Exception as error:
         logging.error(error)
         return dict(CalculateTotalErrorResponse()), 500
+
+
+@expense_bp.post(
+    "/expense",
+    summary="Creates a new expense",
+    responses={
+        201: CreateNewExpenseResponse,
+        400: CreateNewExpenseValidationResponse,
+        500: CreateNewExpenseErrorResponse,
+    },
+)
+def create_expense_endpoint(form: ExpensesBase):
+    try:
+        create_expense(form)
+        return dict(CreateNewExpenseResponse()), 201
+    except ValidationError as error:
+        return jsonify(error=error.message), 400
+    except Exception:
+        return dict(CreateNewExpenseErrorResponse()), 500
 
 
 @expense_bp.put(

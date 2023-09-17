@@ -1,20 +1,14 @@
 from pydantic import BaseModel, Field
-from marshmallow import Schema, fields, validates, ValidationError
+from marshmallow import Schema, fields
 from datetime import datetime
 from typing import List
 
 
 class ExpenseSchema(Schema):
     id = fields.Integer()
-    description = fields.String(required=True)
-    value = fields.Float(required=True)
-    date_time = fields.DateTime(required=True)
-
-    @validates("value")
-    def validate_value(self, value):
-        message = "O Valor não pode ser menor ou igual a zero."
-        if value <= 0:
-            raise ValidationError(message)
+    description = fields.String()
+    value = fields.Float()
+    date_time = fields.DateTime()
 
 
 class ExpensesBase(BaseModel):
@@ -56,7 +50,7 @@ class CreateNewExpenseResponse(BaseModel):
 
 
 class CreateNewExpenseValidationResponse(BaseModel):
-    error = {"value": ["O Valor não pode ser menor ou igual a zero."]}
+    error = "O Valor não pode ser menor ou igual a zero."
 
 
 class CreateNewExpenseErrorResponse(BaseModel):

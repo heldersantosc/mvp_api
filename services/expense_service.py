@@ -1,16 +1,20 @@
 import logging
 from models.expense import Expense
 from sqlalchemy.exc import IntegrityError
-
-from schemas.expense_schema import UpdateExpenseBodySchema
+from exceptions import ValidationError
+from schemas.expense_schema import *
 
 
 def create_expense(data):
     try:
+        if data.value <= 0:
+            error = CreateNewExpenseValidationResponse().error
+            raise ValidationError(error)
+
         expense = Expense(
-            description=data["description"],
-            value=data["value"],
-            date_time=data["date_time"],
+            description=data.description,
+            value=data.value,
+            date_time=data.date_time,
         )
         expense.create()
     except IntegrityError as error:
@@ -21,7 +25,9 @@ def create_expense(data):
 def list_expenses():
     try:
         expenses = Expense.get_all()
-        return expenses
+        expense_schema = ExpenseSchema(many=True)
+        expense_json = expense_schema.dump(expenses)
+        return expense_json
     except IntegrityError as error:
         logging.error(error.args)
         raise ValueError("Erro ao listar todas despesas")
