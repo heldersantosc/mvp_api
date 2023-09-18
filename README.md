@@ -21,3 +21,7 @@ pip install -r requirements.txt
 flask run --host 0.0.0.0 --port 5000
 ```
 
+### 6. Acesse o endpoint para visualizar o swagger
+```
+http://localhost:5000/openapi/swagger#/
+```
