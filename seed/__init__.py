@@ -88,6 +88,9 @@ expenses_seed = [
 
 
 def seed_expense_table():
+    """
+    Seed para popular a tabela somente se estiver vazia
+    """
     if db.session.query(Expense).count() == 0:
         db.session.bulk_save_objects(expenses_seed)
         db.session.commit()

@@ -5,6 +5,10 @@ from typing import List
 
 
 class ExpenseSchema(Schema):
+    """
+    Schema para listar os produtos e usar o many=true
+    """
+
     id = fields.Integer()
     description = fields.String()
     value = fields.Float()
@@ -12,6 +16,10 @@ class ExpenseSchema(Schema):
 
 
 class ExpensesBase(BaseModel):
+    """
+    Schema para validar o form da rota post
+    """
+
     description: str = Field(
         example="Ração para cachorro",
         description="expense description",
@@ -39,6 +47,10 @@ class ExpensesBase(BaseModel):
 
 
 class ListAllExpenses(ExpensesBase):
+    """
+    Schema que herda de ExpensesBase para listar as despesas com o atributo id
+    """
+
     id: int = Field(
         example=3,
         description="Expense unique id",
@@ -46,10 +58,18 @@ class ListAllExpenses(ExpensesBase):
 
 
 class PathIdSchema(BaseModel):
+    """
+    Parâmetro id para as rotas
+    """
+
     id: int = Field(..., description="id from unique expense")
 
 
 class ListAllExpensesResponse(BaseModel):
+    """
+    Schema para retornar uma lista de Despesas
+    """
+
     data: List[ListAllExpenses]
 
 

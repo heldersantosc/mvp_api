@@ -1,9 +1,9 @@
 import os
 from flask_openapi3 import Info, OpenAPI
 from flask_cors import CORS
-from models.expense import Expense, db
+from models.expense import db
 from controllers.expense_controller import expense_bp
-from seed import expenses_seed, seed_expense_table
+from seed import seed_expense_table
 
 info = Info(title="Expenses management", version="1.0.0")
 app = OpenAPI(__name__, info=info)
