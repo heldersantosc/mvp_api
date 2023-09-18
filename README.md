@@ -1,6 +1,6 @@
 # Gerenciador de Despesas #
 
-A aplicação que desenvolvi é um Gerenciador de Despesas. A motivação por trás desse projeto surgiu de uma necessidade pessoal, que é a dificuldade em rastrear e controlar meus gastos quando utilizo dinheiro em espécie. Com o uso desse sistema, agora posso acompanhar com precisão o montante total gasto e detalhar as despesas específicas realizadas com dinheiro em espécie.
+A aplicação que desenvolvi é um Gerenciador de Despesas. A ideia por trás desse projeto surgiu de uma necessidade pessoal, que é a dificuldade em rastrear e controlar meus gastos quando utilizo dinheiro em espécie. Com o uso desse sistema, agora posso acompanhar com precisão o montante total gasto e detalhar as despesas específicas realizadas com dinheiro em espécie.
 
 ## Como executar o projeto? ##
 
